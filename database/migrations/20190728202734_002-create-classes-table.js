@@ -12,10 +12,10 @@ exports.up = function(knex) {
 			.onDelete('CASCADE')
 			.onUpdate('CASCADE');
     tbl.string('theme', 128);
-    tbl.integer('timer');
-    tbl.integer('threshold');
+    tbl.integer('timer').unsigned();
+    tbl.integer('threshold').unsigned();
     tbl.integer('sensitivity');
-    tbl.timestamp('streakSince');
+    tbl.timestamp('streakSince').notNullable().defaultTo(knex.fn.now());
 	});
 };
 

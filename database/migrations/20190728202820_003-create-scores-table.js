@@ -3,7 +3,7 @@ exports.up = function(knex) {
 		tbl.increments();
 
 		tbl
-			.integer('class_id')
+			.integer('classId')
 			.unsigned()
 			.notNullable()
 			.references('id')
@@ -11,10 +11,11 @@ exports.up = function(knex) {
 			.onDelete('CASCADE')
 			.onUpdate('CASCADE');
 
-		tbl.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
+		tbl.timestamp('createdAt').notNullable().defaultTo(knex.fn.now());
 
 		tbl.integer('score').notNullable();
-    tbl.boolean('streak').notNullable();
+		tbl.boolean('streak').notNullable();
+		tbl.integer('threshold').unsigned();
 		tbl.string('theme');
 	});
 };

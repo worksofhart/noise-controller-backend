@@ -8,8 +8,8 @@ module.exports = (req, res, next) => {
 
   // verify the token
   if (token) {
-    jwt.verify(token, secrets.jwtSecret, (err, decodedToken) => {
-      if (err) {
+    jwt.verify(token, secrets.jwtSecret, (error, decodedToken) => {
+      if (error) {
         // invalid token
         res.status(401).json({ message: 'Invalid token' });
       } else {
@@ -20,6 +20,6 @@ module.exports = (req, res, next) => {
       }
     });
   } else {
-    res.status(400).json({ message: 'No token provided' });
+    res.status(400).json({ message: 'Must be logged in' });
   }
 };

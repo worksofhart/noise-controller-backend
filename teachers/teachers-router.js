@@ -51,7 +51,7 @@ router.get('/', restricted, async (req, res) => {
     const teachers = await Teachers.find();
     res.status(200).json(teachers);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to get teachers' });
+    res.status(500).json({ message: 'Failed to get teachers', error });
   }
 });
 
@@ -64,7 +64,7 @@ router.get('/:id', restricted, async (req, res) => {
     if (teacher) {
       res.status(200).json(teacher);
     } else {
-      res.status(404).json({ message: `Could not find teacher with id ${id}` });
+      res.status(404).json({ message: `Could not find teacher with id ${id}`, error });
     }
   } catch (error) {
     res.status(500).json({ message: 'Failed to get teacher' });
@@ -94,7 +94,7 @@ router.put('/:id', restricted, async (req, res) => {
       res.status(404).json({ message: `Could not find teacher with id ${id}` });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Failed to update teacher' });
+    res.status(500).json({ message: 'Failed to update teacher', error });
   }
 });
 
@@ -110,7 +110,7 @@ router.delete('/:id', restricted, async (req, res) => {
       res.status(404).json({ message: `Could not find teacher with id ${id}` });
     }
   } catch (err) {
-    res.status(500).json({ message: 'Failed to delete teacher' });
+    res.status(500).json({ message: 'Failed to delete teacher', error });
   }
 });
 
