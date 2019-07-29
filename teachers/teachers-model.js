@@ -23,13 +23,13 @@ async function add(teacher) {
   return findById(id);
 }
 
-async function findById(teacher_id) {
+async function findById(teacherId) {
   const [teacher, classes] = await Promise.all([
     db('teachers')
-      .where({ id: teacher_id })
+      .where({ id: teacherId })
       .first() || null,
     db('classes')
-      .where({ teacher_id }) || []
+      .where({ teacherId }) || []
   ]);
   if (teacher) teacher.classes = classes;
   return teacher || null;

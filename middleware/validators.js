@@ -2,7 +2,8 @@ const Teachers = require('../teachers/teachers-model.js');
 // const Classes = require('../classes/classes-model.js');
 
 module.exports = {
-  validateTeacher
+  validateTeacher,
+  validateClass
 }
 
 function validate(obj, keys='') {
@@ -16,8 +17,25 @@ function validateTeacher(req, res, next) {
     return;
   }
   const missing = validate(body, 'username|password|firstName|lastName|email');
-  console.log(missing);
   if (missing.length > 0) {
     res.status(428).json({ message: `Missing required field(s): ${missing.join(', ')}` });
-  } else next();
+  } else {
+    req.teacher = body;
+    next();
+  }
+}
+
+function validateClass(req, res, next) {
+  const { body } = req;
+  if (Object.keys(body).length === 0) {
+    res.status(404).json({ message: 'Missing class data' });
+    return;
+  }
+  const missing = validate(body, 'name|teacherId');
+  if (missing.length > 0) {
+    res.status(428).json({ message: `Missing required field(s): ${missing.join(', ')}` });
+  } else {
+    req.classroom = body;
+    next();
+  }
 }

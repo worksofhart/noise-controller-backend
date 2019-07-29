@@ -4,7 +4,7 @@ exports.up = function(knex) {
 
     tbl.string('name', 128).notNullable();
 		tbl
-			.integer('teacher_id')
+			.integer('teacherId')
 			.unsigned()
 			.notNullable()
 			.references('id')
