@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
     jwt.verify(token, secrets.jwtSecret, (error, decodedToken) => {
       if (error) {
         // invalid token
-        res.status(401).json({ message: 'Invalid token' });
+        res.status(401).json({ message: 'Invalid or expired token' });
       } else {
         // valid token
         // makes the token available to the rest of the api
@@ -20,6 +20,6 @@ module.exports = (req, res, next) => {
       }
     });
   } else {
-    res.status(400).json({ message: 'Must be logged in' });
+    res.status(412).json({ message: 'Request must include Authorization header' });
   }
 };

@@ -26,9 +26,15 @@ async function add(classroom) {
 }
 
 async function findById(id) {
-  return db('classes')
-    .where({ id })
-    .first();
+  const [classes, scores] = await Promise.all([
+    db('classes')
+      .where({ id })
+      .first() || null,
+    db('scores')
+      .where({ classId: id }) || []
+  ]);
+  if (classes) classes.scores = scores;
+  return classes;
 }
 
 async function update(id, changes) {

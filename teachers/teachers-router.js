@@ -19,13 +19,16 @@ router.post('/register', validateTeacher, (req, res) => {
     })
     .catch(error => {
       console.log(error);
-      res.status(500).json({ message: 'Teacher could not be added' });
+      res.status(500).json({ message: 'Teacher could not be added', error });
     });
 });
 
 router.post('/login', (req, res) => {
   let { username, password } = req.body;
 
+  if (!username || !password) {
+    res.status(428).json({ message: 'Missing username or password' })
+  } else {
   Teachers.findBy({ username })
     .first()
     .then(teacher => {
@@ -42,8 +45,9 @@ router.post('/login', (req, res) => {
       }
     })
     .catch(error => {
-      res.status(500).json({ message: 'Error logging in' });
+      res.status(500).json({ message: 'Error logging in', error });
     });
+  }
 });
 
 router.get('/', restricted, async (req, res) => {
@@ -67,7 +71,7 @@ router.get('/:id', restricted, async (req, res) => {
       res.status(404).json({ message: `Could not find teacher with id ${id}`, error });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Failed to get teacher' });
+    res.status(500).json({ message: 'Failed to get teacher', error });
   }
 });
 
