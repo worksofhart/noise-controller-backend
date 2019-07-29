@@ -135,7 +135,7 @@ _http method_: **[POST]**
   }
 ```
 
-##### 428 (Method Not Allowed)
+##### 428 (Preconditon Failed)
 
 ```
   {
