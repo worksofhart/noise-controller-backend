@@ -63,10 +63,53 @@ router.get('/:id', restricted, async (req, res) => {
     if (teacher) {
       res.status(200).json(teacher);
     } else {
-      res.status(404).json({ message: 'Could not find teacher with given id' })
+      res.status(404).json({ message: `Could not find teacher with id ${id}` });
     }
   } catch (error) {
     res.status(500).json({ message: 'Failed to get teacher' });
+  }
+});
+
+router.put('/:id', restricted, async (req, res) => {
+  const { id } = req.params;
+  let changes = req.body;
+    if (Object.keys(changes).length === 0) {
+    res.status(404).json({ message: 'Missing teacher data' });
+    return;
+  }
+  if (changes.password) {
+    const hash = bcrypt.hashSync(changes.password, 10); // 2 ^ n
+    changes.password = hash;
+  }
+
+  try {
+    const teacher = await Teachers.findById(id);
+
+    if (teacher) {
+      const updated = await Teachers.update(id, changes);
+      delete updated.password;
+      res.status(200).json(updated);
+    } else {
+      res.status(404).json({ message: `Could not find teacher with id ${id}` });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to update teacher' });
+  }
+});
+
+router.delete('/:id', restricted, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deleted = await Teachers.remove(id);
+
+    if (deleted) {
+      res.status(200).json({ message: `Teacher with id ${id} deleted` });
+    } else {
+      res.status(404).json({ message: `Could not find teacher with id ${id}` });
+    }
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to delete teacher' });
   }
 });
 

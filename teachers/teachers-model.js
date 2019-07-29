@@ -5,6 +5,8 @@ module.exports = {
   find,
   findBy,
   findById,
+  update,
+  remove
 };
 
 function find() {
@@ -31,4 +33,17 @@ async function findById(teacher_id) {
   ]);
   if (teacher) teacher.classes = classes;
   return teacher || null;
+}
+
+async function update(id, changes) {
+  await db('teachers')
+    .where({ id })
+    .update(changes);
+  return findById(id);
+}
+
+async function remove(id) {
+  return await db('teachers')
+    .where({ id })
+    .del();
 }

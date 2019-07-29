@@ -12,12 +12,12 @@ function validate(obj, keys='') {
 function validateTeacher(req, res, next) {
   const { body } = req;
   if (Object.keys(body).length === 0) {
-    res.status(400).json({ message: 'Missing teacher data' });
+    res.status(404).json({ message: 'Missing teacher data' });
     return;
   }
   const missing = validate(body, 'username|password|firstName|lastName|email');
   console.log(missing);
   if (missing.length > 0) {
-    res.status(400).json({ message: `Missing required field(s): ${missing.join(', ')}` });
+    res.status(428).json({ message: `Missing required field(s): ${missing.join(', ')}` });
   } else next();
 }
