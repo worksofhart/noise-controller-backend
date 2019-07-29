@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const secrets = require('../config/secrets.js');
 
 const Teachers = require('./teachers-model');
+const restricted = require('../middleware/restricted');
 const { validateTeacher } = require('../middleware/validators');
 
 router.post('/register', validateTeacher, (req, res) => {
@@ -30,9 +31,9 @@ router.post('/login', (req, res) => {
       if (teacher && bcrypt.compareSync(password, teacher.password)) {
         // produce a token
         const token = generateToken(teacher);
-
+        delete teacher.password;
         res.status(200).json({
-          message: `Login successful`,
+          ...teacher,
           token,
         });
       } else {
@@ -42,6 +43,31 @@ router.post('/login', (req, res) => {
     .catch(error => {
       res.status(500).json({ message: 'Error logging in' });
     });
+});
+
+router.get('/', restricted, async (req, res) => {
+  try {
+    const teachers = await Teachers.find();
+    res.status(200).json(teachers);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to get teachers' });
+  }
+});
+
+router.get('/:id', restricted, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const teacher = await Teachers.findById(id);
+    delete teacher.password;
+    if (teacher) {
+      res.status(200).json(teacher);
+    } else {
+      res.status(404).json({ message: 'Could not find teacher with given id' })
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to get teacher' });
+  }
 });
 
 function generateToken(teacher) {

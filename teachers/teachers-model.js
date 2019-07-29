@@ -21,8 +21,14 @@ async function add(teacher) {
   return findById(id);
 }
 
-function findById(id) {
-  return db('teachers')
-    .where({ id })
-    .first();
+async function findById(teacher_id) {
+  const [teacher, classes] = await Promise.all([
+    db('teachers')
+      .where({ id: teacher_id })
+      .first() || null,
+    db('classes')
+      .where({ teacher_id }) || []
+  ]);
+  if (teacher) teacher.classes = classes;
+  return teacher || null;
 }
